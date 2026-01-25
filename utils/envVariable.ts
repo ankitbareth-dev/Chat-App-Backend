@@ -2,10 +2,24 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const ENV = {
-  PORT: process.env.PORT,
-  DATABASE_URL: process.env.DATABASE_URL,
-  JWT_SECRET: process.env.JWT_SECRET,
+type EnvConfig = {
+  PORT: number;
+  DATABASE_URL: string;
+  JWT_SECRET: string;
 };
 
-export default ENV;
+function getEnv(key: string): string {
+  const value = process.env[key];
+  if (!value) {
+    throw new Error(`❌ Missing environment variable: ${key}`);
+  }
+  return value;
+}
+
+const env: EnvConfig = {
+  PORT: Number(getEnv("PORT")),
+  DATABASE_URL: getEnv("DATABASE_URL"),
+  JWT_SECRET: getEnv("JWT_SECRET"),
+};
+
+export default env;

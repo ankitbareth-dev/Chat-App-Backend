@@ -23,3 +23,23 @@ export const sendMessage = async (
 
   return message;
 };
+
+export const getConversation = async (userId: string, partnerId: string) => {
+  const messages = await prisma.message.findMany({
+    where: {
+      OR: [
+        {
+          AND: [{ senderId: userId }, { receiverId: partnerId }],
+        },
+        {
+          AND: [{ senderId: partnerId }, { receiverId: userId }],
+        },
+      ],
+    },
+    orderBy: {
+      timestamp: "asc",
+    },
+  });
+
+  return messages;
+};

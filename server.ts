@@ -1,8 +1,22 @@
 import app from "./app";
-import ENV from "./utils/envVariable";
+import env from "./utils/envVariable";
+import { createServer } from "http";
+import { Server } from "socket.io";
+import { initializeSocket } from "./socket";
 
-const PORT = ENV.PORT;
+const PORT = env.PORT;
 
-app.listen(PORT, () => {
+const httpServer = createServer(app);
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*",
+    credentials: true,
+  },
+});
+
+initializeSocket(io);
+
+httpServer.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
 });

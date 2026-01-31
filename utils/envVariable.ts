@@ -6,6 +6,7 @@ type EnvConfig = {
   PORT: number;
   DATABASE_URL: string;
   JWT_SECRET: string;
+  CLIENT_URL: string;
 };
 
 function getEnv(key: string): string {
@@ -20,6 +21,7 @@ const env: EnvConfig = {
   PORT: Number(getEnv("PORT")),
   DATABASE_URL: getEnv("DATABASE_URL"),
   JWT_SECRET: getEnv("JWT_SECRET"),
+  CLIENT_URL: getEnv("ClIENT_URL"),
 };
 
 export default env;

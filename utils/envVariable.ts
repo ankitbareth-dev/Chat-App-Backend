@@ -21,7 +21,7 @@ const env: EnvConfig = {
   PORT: Number(getEnv("PORT")),
   DATABASE_URL: getEnv("DATABASE_URL"),
   JWT_SECRET: getEnv("JWT_SECRET"),
-  CLIENT_URL: getEnv("ClIENT_URL"),
+  CLIENT_URL: getEnv("CLIENT_URL"),
 };
 
 export default env;

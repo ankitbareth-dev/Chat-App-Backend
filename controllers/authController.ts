@@ -1,17 +1,32 @@
 import { Request, Response } from "express";
 import { signupSchema, loginSchema } from "../validators/authValidator";
 import { signupUser, loginUser } from "../services/authService";
+import { ZodError } from "zod";
 
 export const signup = async (req: Request, res: Response) => {
   try {
     const validatedData = signupSchema.parse(req.body);
     const user = await signupUser(validatedData);
-    res.status(201).json({ message: "User created successfully", user });
-  } catch (error: any) {
-    if (error.name === "ZodError") {
-      return res.status(400).json({ message: error.errors });
+    if (user) {
+      res
+        .status(201)
+        .json({ success: true, message: "User created successfully" });
     }
-    res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    if (error instanceof ZodError) {
+      const missingFields = error.issues
+        .filter(
+          (issue) =>
+            issue.code === "invalid_type" &&
+            issue.message.includes("undefined"),
+        )
+        .map((issue) => issue.path.join("."));
+
+      return res.status(400).json({
+        message: "Missing required fields",
+        missing: missingFields,
+      });
+    }
   }
 };
 

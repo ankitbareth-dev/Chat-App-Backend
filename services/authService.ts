@@ -11,7 +11,9 @@ export const signupUser = async (data: any) => {
   });
 
   if (existingUser) {
-    throw new Error("User already exists");
+    const err = new Error("User already exists");
+    (err as any).statusCode = 404;
+    throw err;
   }
 
   const hashedPassword = await bcrypt.hash(data.password, 10);
@@ -41,13 +43,17 @@ export const loginUser = async (data: any) => {
   });
 
   if (!user) {
-    throw new Error("Invalid credentials");
+    const err = new Error("User not found");
+    (err as any).statusCode(404);
+    throw err;
   }
 
   const isPasswordValid = await bcrypt.compare(data.password, user.password);
 
   if (!isPasswordValid) {
-    throw new Error("Invalid credentials");
+    const err = new Error("Invalid credentials");
+    (err as any).statusCode(400);
+    throw err;
   }
 
   const token = jwt.sign(

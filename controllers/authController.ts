@@ -41,12 +41,23 @@ export const login = async (req: Request, res: Response) => {
       sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-
-    res.status(200).json({ message: "Login successful", user });
-  } catch (error: any) {
-    if (error.name === "ZodError") {
-      return res.status(400).json({ message: error.errors });
+    if (user) {
+      res.status(200).json({ sucess: true, message: "Login successful" });
     }
-    res.status(401).json({ message: error.message });
+  } catch (error: any) {
+    if (error instanceof ZodError) {
+      const missingFields = error.issues
+        .filter(
+          (issue) =>
+            issue.code === "invalid_type" &&
+            issue.message.includes("undefined"),
+        )
+        .map((issue) => issue.path.join("."));
+
+      return res.status(400).json({
+        message: "Missing required fields",
+        missing: missingFields,
+      });
+    }
   }
 };

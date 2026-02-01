@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { signupSchema, loginSchema } from "../validators/authValidator";
 import { signupUser, loginUser } from "../services/authService";
-import { ZodError } from "zod";
+import { success, ZodError } from "zod";
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -60,4 +60,16 @@ export const login = async (req: Request, res: Response) => {
       });
     }
   }
+};
+
+export const logout = (req: Request, res: Response) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
+  });
+  res.status(200).json({
+    success: true,
+    message: "Logout Sucessfull",
+  });
 };

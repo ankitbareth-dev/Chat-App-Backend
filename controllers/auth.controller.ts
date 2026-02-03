@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { signupUser, loginUser } from "../services/authService";
+import { signupUser, loginUser } from "../services/auth.service";
 import { sendSuccess } from "../utils/apiResponse";
 import { catchAsync } from "../middleware/catchAsync";
 

@@ -3,7 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 
-import authRoutes from "./routes/authRoutes";
+import authRoutes from "./routes/auth.routes";
 
 import env from "./utils/envVariable";
 import { globalErrorHandler } from "./utils/globalErrorHandler";

@@ -4,11 +4,9 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 
 import authRoutes from "./routes/authRoutes";
-import userRoutes from "./routes/userRoutes";
-import messageRoutes from "./routes/messageRoutes";
 
 import env from "./utils/envVariable";
-import { globalErrorHandler } from "./middleware/globalErrorHandler";
+import { globalErrorHandler } from "./utils/globalErrorHandler";
 
 const app: Application = express();
 
@@ -31,8 +29,6 @@ app.get("/", (_req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/messages", messageRoutes);
 
 app.use(globalErrorHandler);
 

@@ -1,9 +1,16 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { prisma } from "../utils/prisma";
-import env from "../utils/envVariable";
+import { AppError } from "../utils/AppError";
+import { SignupInput, LoginInput, AuthResponse } from "../types/auth.types";
 
-export const signupUser = async (data: any) => {
+const signToken = (id: string, phone: string) => {
+  return jwt.sign({ userId: id, phone }, process.env.JWT_SECRET!, {
+    expiresIn: "7d",
+  });
+};
+
+export const signupUser = async (data: SignupInput): Promise<AuthResponse> => {
   const existingUser = await prisma.user.findFirst({
     where: {
       OR: [{ email: data.email }, { phone: data.phone }],
@@ -11,58 +18,57 @@ export const signupUser = async (data: any) => {
   });
 
   if (existingUser) {
-    const err = new Error("User already exists");
-    (err as any).statusCode = 404;
-    throw err;
+    if (existingUser.email === data.email) {
+      throw new AppError(409, "Email is already registered.");
+    }
+    throw new AppError(409, "Phone number is already registered.");
   }
 
-  const hashedPassword = await bcrypt.hash(data.password, 10);
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(data.password, saltRounds);
 
-  const user = await prisma.user.create({
-    data: {
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      password: hashedPassword,
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      phone: true,
-      createdAt: true,
-    },
-  });
+  try {
+    const newUser = await prisma.user.create({
+      data: {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        createdAt: true,
+      },
+    });
 
-  return user;
+    return newUser;
+  } catch (error) {
+    console.error("DB Error:", error);
+    throw new AppError(500, "Failed to create user. Please try again.");
+  }
 };
 
-export const loginUser = async (data: any) => {
+export const loginUser = async (data: LoginInput) => {
   const user = await prisma.user.findUnique({
     where: { phone: data.phone },
   });
 
   if (!user) {
-    const err = new Error("User not found");
-    (err as any).statusCode(404);
-    throw err;
+    throw new AppError(404, "User not found with this phone number.");
   }
 
   const isPasswordValid = await bcrypt.compare(data.password, user.password);
 
   if (!isPasswordValid) {
-    const err = new Error("Invalid credentials");
-    (err as any).statusCode(400);
-    throw err;
+    throw new AppError(401, "Invalid phone or password.");
   }
 
-  const token = jwt.sign(
-    { userId: user.id, phone: user.phone },
-    env.JWT_SECRET!,
-    { expiresIn: "7d" },
-  );
+  const token = signToken(user.id, user.phone);
 
-  const userWithoutPassword = {
+  const userWithoutPassword: AuthResponse = {
     id: user.id,
     name: user.name,
     email: user.email,

@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { prisma } from "../utils/prisma";
 import { AppError } from "../utils/AppError";
 import { SignupInput, LoginInput, AuthResponse } from "../types/auth.types";
+import { generateAvatarUrl } from "../utils/generateAvatar";
 
 const signToken = (id: string, phone: string) => {
   return jwt.sign({ userId: id, phone }, process.env.JWT_SECRET!, {
@@ -26,6 +27,7 @@ export const signupUser = async (data: SignupInput): Promise<AuthResponse> => {
 
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(data.password, saltRounds);
+  const defaultProfilePic = generateAvatarUrl(data.name);
 
   try {
     const newUser = await prisma.user.create({
@@ -34,17 +36,22 @@ export const signupUser = async (data: SignupInput): Promise<AuthResponse> => {
         email: data.email,
         phone: data.phone,
         password: hashedPassword,
+        profilePicture: defaultProfilePic,
       },
       select: {
         id: true,
         name: true,
         email: true,
         phone: true,
+        profilePicture: true,
         createdAt: true,
       },
     });
 
-    return newUser;
+    return {
+      ...newUser,
+      profilePicture: newUser.profilePicture || generateAvatarUrl(newUser.name),
+    };
   } catch (error) {
     console.error("DB Error:", error);
     throw new AppError(500, "Failed to create user. Please try again.");
@@ -73,6 +80,7 @@ export const loginUser = async (data: LoginInput) => {
     name: user.name,
     email: user.email,
     phone: user.phone,
+    profilePicture: user.profilePicture || generateAvatarUrl(user.name),
     createdAt: user.createdAt,
   };
 

@@ -4,6 +4,8 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 
 import authRoutes from "./routes/auth.routes";
+import userRouter from "./routes/user.routes";
+import chatRoutes from "./routes/chat.routes";
 
 import env from "./utils/envVariable";
 import { globalErrorHandler } from "./utils/globalErrorHandler";
@@ -29,6 +31,8 @@ app.get("/", (_req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/user/update-profile", userRouter);
+app.use("/api/chats", chatRoutes);
 
 app.use(globalErrorHandler);
 

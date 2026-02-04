@@ -3,7 +3,7 @@ import { Server as HTTPServer } from "http";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
 import env from "./utils/envVariable";
-import { prisma } from "./utils/prisma";
+import { saveMessage } from "./services/chat.service";
 
 declare module "socket.io" {
   interface Socket {
@@ -58,25 +58,13 @@ export const initializeSocket = (httpServer: HTTPServer) => {
         const { receiverId, content } = data;
 
         try {
-          const messageData = {
+          const newMessage = await saveMessage({
             senderId: socket.userId,
             receiverId,
             content,
-          };
-
-          const newMessage = await prisma.message.create({
-            data: messageData,
-            select: {
-              id: true,
-              content: true,
-              senderId: true,
-              receiverId: true,
-              timestamp: true,
-            },
           });
 
           io.to(receiverId).emit("receive_message", newMessage);
-
           socket.emit("message_sent", newMessage);
         } catch (error) {
           console.error("Socket Message Error:", error);

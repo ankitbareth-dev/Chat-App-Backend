@@ -17,7 +17,7 @@ const sendMessageSchema = z.object({
 
 router.use(authenticate);
 
-router.get("/history", validate(getMessagesSchema), getMessages);
+router.get("/history", validate(getMessagesSchema, "query"), getMessages);
 router.get("/list", getChatsList);
 
 router.post("/send", validate(sendMessageSchema), sendMessageFallback);

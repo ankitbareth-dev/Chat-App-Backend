@@ -4,9 +4,10 @@ import { prisma } from "../utils/prisma";
 import { AppError } from "../utils/AppError";
 import { SignupInput, LoginInput, AuthResponse } from "../types/auth.types";
 import { generateAvatarUrl } from "../utils/generateAvatar";
+import env from "../utils/envVariable";
 
 const signToken = (id: string, phone: string) => {
-  return jwt.sign({ userId: id, phone }, process.env.JWT_SECRET!, {
+  return jwt.sign({ userId: id, phone }, env.JWT_SECRET!, {
     expiresIn: "7d",
   });
 };

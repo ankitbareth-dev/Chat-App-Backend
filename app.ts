@@ -31,7 +31,7 @@ app.get("/", (_req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRoutes);
-app.use("/api/user/update-profile", userRouter);
+app.use("/api/user", userRouter);
 app.use("/api/chats", chatRoutes);
 
 app.use(globalErrorHandler);

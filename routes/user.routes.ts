@@ -16,6 +16,6 @@ router.patch(
   validate(updateProfileSchema),
   updateUserProfile,
 );
-router.get("/search", validate(searchUserSchema), searchUsers);
+router.get("/search", validate(searchUserSchema, "query"), searchUsers);
 
 export default router;

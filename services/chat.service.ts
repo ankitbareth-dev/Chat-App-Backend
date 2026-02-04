@@ -81,3 +81,31 @@ export const getChatList = async (myId: string): Promise<ChatListUser[]> => {
     throw new AppError(500, "Failed to load chat list.");
   }
 };
+export interface MessageInput {
+  senderId: string;
+  receiverId: string;
+  content: string;
+}
+export const saveMessage = async (data: MessageInput) => {
+  try {
+    const message = await prisma.message.create({
+      data: {
+        senderId: data.senderId,
+        receiverId: data.receiverId,
+        content: data.content,
+      },
+      select: {
+        id: true,
+        content: true,
+        senderId: true,
+        receiverId: true,
+        timestamp: true,
+      },
+    });
+
+    return message;
+  } catch (error) {
+    console.error("Error saving message:", error);
+    throw new Error("Failed to save message");
+  }
+};

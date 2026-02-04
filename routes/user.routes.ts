@@ -1,8 +1,11 @@
 import { Router } from "express";
-import { updateUserProfile } from "../controllers/user.controller";
+import { searchUsers, updateUserProfile } from "../controllers/user.controller";
 import { authenticate } from "../middleware/authMiddleware";
 import { validate } from "../middleware/validator";
-import { updateProfileSchema } from "../validators/userValidator";
+import {
+  searchUserSchema,
+  updateProfileSchema,
+} from "../validators/userValidator";
 
 const router = Router();
 
@@ -13,5 +16,6 @@ router.patch(
   validate(updateProfileSchema),
   updateUserProfile,
 );
+router.get("/search", validate(searchUserSchema), searchUsers);
 
 export default router;

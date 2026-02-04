@@ -1,6 +1,7 @@
 import { prisma } from "../utils/prisma";
 import { AppError } from "../utils/AppError";
-import { UpdateProfileInput } from "../types/user.types";
+import { UpdateProfileInput, PublicUser } from "../types/user.types";
+import { generateAvatarUrl } from "../utils/generateAvatar";
 
 export const updateProfile = async (
   userId: string,
@@ -41,5 +42,45 @@ export const updateProfile = async (
     }
     console.error("Profile Update Error:", error);
     throw new AppError(500, "Failed to update profile.");
+  }
+};
+export const searchUsersByPhone = async (
+  currentUserId: string,
+  phonePrefix: string,
+): Promise<PublicUser[]> => {
+  try {
+    const users = await prisma.user.findMany({
+      where: {
+        AND: [
+          {
+            phone: {
+              startsWith: phonePrefix,
+            },
+          },
+          {
+            id: {
+              not: currentUserId,
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        name: true,
+        phone: true,
+        profilePicture: true,
+      },
+      take: 10,
+    });
+
+    const formattedUsers = users.map((user) => ({
+      ...user,
+      profilePicture: user.profilePicture || generateAvatarUrl(user.name),
+    }));
+
+    return formattedUsers;
+  } catch (error) {
+    console.error("Search Error:", error);
+    throw new AppError(500, "Failed to search users.");
   }
 };

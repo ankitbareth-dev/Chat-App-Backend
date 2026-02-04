@@ -11,3 +11,9 @@ export interface GetMessagesParams {
   page?: number;
   limit?: number;
 }
+export interface ChatListUser {
+  id: string;
+  name: string;
+  phone: string;
+  profilePicture: string;
+}

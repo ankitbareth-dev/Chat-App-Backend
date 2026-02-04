@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { getChatHistory } from "../services/chat.service";
+import { getChatHistory, getChatList } from "../services/chat.service";
 import { sendSuccess } from "../utils/apiResponse";
 import { catchAsync } from "../middleware/catchAsync";
 import { AuthRequest } from "../middleware/authMiddleware";
@@ -22,5 +22,18 @@ export const getMessages = catchAsync(
       itemsPerPage: limit,
       count: messages.length,
     });
+  },
+);
+export const getChatsList = catchAsync(
+  async (req: AuthRequest, res: Response) => {
+    const { userId } = req;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const users = await getChatList(userId);
+
+    sendSuccess(res, 200, "Chat list retrieved successfully", users);
   },
 );

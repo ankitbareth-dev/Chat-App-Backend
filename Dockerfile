@@ -11,14 +11,20 @@ COPY package*.json ./
 # Install all dependencies
 RUN npm ci
 
-# Copy source code (root directory)
+# Copy source code
 COPY . .
 
-# Compile TypeScript
-RUN npm run build
+# 1. GENERATE PRISMA CLIENT
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV DATABASE_URL="postgresql://postgres:password@localhost:5432/postgres"
+ENV JWT_SECRET="temp_secret"
+ENV CLIENT_URL="http://localhost:3000"
 
-# Generate Prisma Client inside the build
 RUN npx prisma generate
+
+# 2. Compile TypeScript
+RUN npm run build
 
 
 # Stage 2: Run
@@ -34,16 +40,15 @@ RUN npm ci --omit=dev
 # Copy compiled code
 COPY --from=builder /app/dist ./dist
 
-# Copy Prisma folder
+# Copy Prisma schema
 COPY --from=builder /app/prisma ./prisma
 
-# Copy generated Prisma Client
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+# --- REMOVED THE LINE THAT CAUSED THE ERROR ---
+# We don't need to copy .prisma because we generate it in the CMD below
 
 ENV NODE_ENV=production
 
 EXPOSE 3000
 
-# We run 'prisma generate' again to ensure compatibility with the node environment
-# then we start the server. We do NOT run 'migrate deploy' here.
+# Generate again to ensure compatibility with production node_modules, then start
 CMD sh -c "npx prisma generate && npm start"

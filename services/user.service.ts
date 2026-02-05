@@ -73,7 +73,7 @@ export const searchUsersByPhone = async (
       take: 10,
     });
 
-    const formattedUsers = users.map((user) => ({
+    const formattedUsers = users.map((user: any) => ({
       ...user,
       profilePicture: user.profilePicture || generateAvatarUrl(user.name),
     }));

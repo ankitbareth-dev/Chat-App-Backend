@@ -4,10 +4,10 @@
   "description": "Chat application for real time messages",
   "license": "ISC",
   "author": "ankit",
-  "type": "module",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon --exec tsx server.ts",
+    "start": "node dist/server.js",
     "build": "tsc"
   },
   "dependencies": {

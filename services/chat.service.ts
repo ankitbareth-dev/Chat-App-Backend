@@ -52,8 +52,8 @@ export const getChatList = async (myId: string): Promise<ChatListUser[]> => {
       select: { senderId: true },
     });
 
-    const sentIds = sentTo.map((item) => item.receiverId);
-    const receivedIds = receivedFrom.map((item) => item.senderId);
+    const sentIds = sentTo.map((item: any) => item.receiverId);
+    const receivedIds = receivedFrom.map((item: any) => item.senderId);
     const uniqueUserIds = [...new Set([...sentIds, ...receivedIds])];
 
     if (uniqueUserIds.length === 0) {
@@ -70,7 +70,7 @@ export const getChatList = async (myId: string): Promise<ChatListUser[]> => {
       },
     });
 
-    const formattedUsers = users.map((user) => ({
+    const formattedUsers = users.map((user: any) => ({
       ...user,
       profilePicture: user.profilePicture || generateAvatarUrl(user.name),
     }));

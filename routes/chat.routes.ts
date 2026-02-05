@@ -7,19 +7,17 @@ import {
 } from "../controllers/chat.controller";
 import { authenticate } from "../middleware/authMiddleware";
 import { validate } from "../middleware/validator";
-import { getMessagesSchema } from "../validators/chatValidator";
+import {
+  getMessagesSchema,
+  sendMessageSchema,
+} from "../validators/chatValidator";
 
 const router = Router();
-const sendMessageSchema = z.object({
-  receiverId: z.string(),
-  content: z.string().min(1),
-});
 
 router.use(authenticate);
 
 router.get("/history", validate(getMessagesSchema, "query"), getMessages);
-router.get("/list", getChatsList);
-
 router.post("/send", validate(sendMessageSchema), sendMessageFallback);
+router.get("/list", getChatsList);
 
 export default router;

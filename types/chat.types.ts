@@ -17,3 +17,8 @@ export interface ChatListUser {
   phone: string;
   profilePicture: string;
 }
+export interface MessageInput {
+  senderId: string;
+  receiverId: string;
+  content: string;
+}

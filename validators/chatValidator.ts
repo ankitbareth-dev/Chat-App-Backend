@@ -5,3 +5,7 @@ export const getMessagesSchema = z.object({
   page: z.coerce.number().int().positive().optional().default(1),
   limit: z.coerce.number().int().positive().max(100).optional().default(20),
 });
+export const sendMessageSchema = z.object({
+  receiverId: z.string(),
+  content: z.string().min(1),
+});

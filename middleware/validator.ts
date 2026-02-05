@@ -15,7 +15,12 @@ export const validate = (
             ? req.query
             : req.params;
 
-      schema.parse(dataToValidate);
+      const validatedData = schema.parse(dataToValidate);
+      if (target === "body") {
+        req.body = validatedData as any;
+      } else {
+        req.query = validatedData as any;
+      }
       next();
     } catch (error) {
       if (error instanceof ZodError) {

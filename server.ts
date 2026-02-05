@@ -1,7 +1,7 @@
 import app from "./app";
 import env from "./utils/envVariable";
 import { createServer } from "http";
-import { initializeSocket } from "./socket";
+import { initializeSocket } from "./socket/index";
 
 const PORT = env.PORT;
 

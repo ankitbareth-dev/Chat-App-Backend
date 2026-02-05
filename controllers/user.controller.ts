@@ -1,4 +1,4 @@
-import { Response, NextFunction } from "express";
+import { Response } from "express";
 import { searchUsersByPhone, updateProfile } from "../services/user.service";
 import { sendSuccess } from "../utils/apiResponse";
 import { catchAsync } from "../middleware/catchAsync";

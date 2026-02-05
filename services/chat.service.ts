@@ -1,6 +1,6 @@
 import { prisma } from "../utils/prisma";
 import { AppError } from "../utils/AppError";
-import { ChatListUser, ChatMessage } from "../types/chat.types";
+import { ChatListUser, ChatMessage, MessageInput } from "../types/chat.types";
 import { generateAvatarUrl } from "../utils/generateAvatar";
 
 export const getChatHistory = async (
@@ -81,11 +81,7 @@ export const getChatList = async (myId: string): Promise<ChatListUser[]> => {
     throw new AppError(500, "Failed to load chat list.");
   }
 };
-export interface MessageInput {
-  senderId: string;
-  receiverId: string;
-  content: string;
-}
+
 export const saveMessage = async (data: MessageInput) => {
   try {
     const message = await prisma.message.create({

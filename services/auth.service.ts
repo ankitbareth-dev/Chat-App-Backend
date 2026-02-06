@@ -87,3 +87,28 @@ export const loginUser = async (data: LoginInput) => {
 
   return { user: userWithoutPassword, token };
 };
+
+export const checkUserStatus = async (
+  userId: string,
+): Promise<AuthResponse> => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      phone: true,
+      profilePicture: true,
+      createdAt: true,
+    },
+  });
+
+  if (!user) {
+    throw new AppError(404, "User not found.");
+  }
+
+  return {
+    ...user,
+    profilePicture: user.profilePicture || generateAvatarUrl(user.name),
+  };
+};

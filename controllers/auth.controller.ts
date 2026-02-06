@@ -10,7 +10,14 @@ import { AppError } from "@/utils/AppError";
 import { AuthRequest } from "@/middleware/authMiddleware";
 
 export const signup = catchAsync(async (req: Request, res: Response) => {
-  const user = await signupUser(req.body);
+  const { user, token } = await signupUser(req.body);
+
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
 
   sendSuccess(res, 201, "User created successfully", user);
 });
@@ -32,7 +39,7 @@ export const logout = catchAsync(async (_req: Request, res: Response) => {
   res.clearCookie("token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
 
   sendSuccess(res, 200, "Logout Successful");

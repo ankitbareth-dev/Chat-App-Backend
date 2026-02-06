@@ -6,13 +6,20 @@ import { SignupInput, LoginInput, AuthResponse } from "../types/auth.types";
 import { generateAvatarUrl } from "../utils/generateAvatar";
 import env from "../utils/envVariable";
 
+interface SignupServiceResult {
+  user: AuthResponse;
+  token: string;
+}
+
 const signToken = (id: string, phone: string) => {
   return jwt.sign({ userId: id, phone }, env.JWT_SECRET!, {
     expiresIn: "7d",
   });
 };
 
-export const signupUser = async (data: SignupInput): Promise<AuthResponse> => {
+export const signupUser = async (
+  data: SignupInput,
+): Promise<SignupServiceResult> => {
   const existingUser = await prisma.user.findFirst({
     where: {
       OR: [{ email: data.email }, { phone: data.phone }],
@@ -48,10 +55,15 @@ export const signupUser = async (data: SignupInput): Promise<AuthResponse> => {
         createdAt: true,
       },
     });
+    const token = signToken(newUser.id, newUser.phone);
 
     return {
-      ...newUser,
-      profilePicture: newUser.profilePicture || generateAvatarUrl(newUser.name),
+      token,
+      user: {
+        ...newUser,
+        profilePicture:
+          newUser.profilePicture || generateAvatarUrl(newUser.name),
+      },
     };
   } catch (error) {
     console.error("DB Error:", error);

@@ -10,11 +10,25 @@ import chatRoutes from "./routes/chat.routes";
 import env from "./utils/envVariable";
 import { globalErrorHandler } from "./utils/globalErrorHandler";
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:5175",
+];
+
 const app: Application = express();
 
 app.use(
   cors({
-    origin: env.CLIENT_URL,
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 );

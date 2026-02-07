@@ -5,9 +5,14 @@ import { socketAuthMiddleware } from "./middleware/auth";
 import { registerChatHandlers } from "./handlers/chatEvents";
 
 export const initializeSocket = (httpServer: HTTPServer) => {
+  const allowedOrigins = [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:5175",
+  ];
   const io = new SocketIOServer(httpServer, {
     cors: {
-      origin: env.CLIENT_URL,
+      origin: allowedOrigins,
       credentials: true,
     },
   });

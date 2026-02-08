@@ -1,6 +1,6 @@
 import { Server as SocketIOServer } from "socket.io";
 import { Server as HTTPServer } from "http";
-import env from "../utils/envVariable";
+//import env from "../utils/envVariable"; will use latter on production
 import { socketAuthMiddleware } from "./middleware/auth";
 import { registerChatHandlers } from "./handlers/chatEvents";
 
@@ -21,7 +21,7 @@ export const initializeSocket = (httpServer: HTTPServer) => {
 
   io.on("connection", (socket) => {
     const userId = socket.userId;
-    console.log(`User connected: ${userId}`);
+    //console.log(`User connected: ${userId}`);
 
     if (userId) {
       socket.join(userId);

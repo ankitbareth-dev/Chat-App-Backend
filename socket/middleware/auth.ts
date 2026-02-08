@@ -12,14 +12,11 @@ declare module "socket.io" {
 export const socketAuthMiddleware = async (socket: Socket, next: any) => {
   try {
     const cookiesHeader = socket.handshake.headers.cookie;
-    console.log("🍪 Raw cookie header:", cookiesHeader);
-
     if (!cookiesHeader) {
       return next(new Error("Unauthorized: No cookies"));
     }
 
     const parsedCookies = cookie.parse(cookiesHeader);
-    console.log("🍪 Parsed cookies:", parsedCookies);
 
     const token = parsedCookies.token;
     if (!token) {

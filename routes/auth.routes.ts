@@ -7,7 +7,7 @@ import {
 } from "../controllers/auth.controller";
 import { validate } from "../middleware/validator";
 import { signupSchema, loginSchema } from "../validators/authValidator";
-import { authenticate } from "@/middleware/authMiddleware";
+import { authenticate } from "../middleware/authMiddleware";
 
 const router = Router();
 

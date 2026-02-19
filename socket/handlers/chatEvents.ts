@@ -1,8 +1,6 @@
 import { Server as SocketIOServer, Socket } from "socket.io";
 import { saveMessage } from "../../services/chat.service";
 
-const getChatRoom = (userId: string) => userId;
-
 export const registerChatHandlers = (io: SocketIOServer, socket: Socket) => {
   socket.on("join_chat", (targetUserId: string) => {
     const userId = socket.userId;

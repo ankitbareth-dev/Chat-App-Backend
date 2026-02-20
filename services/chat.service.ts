@@ -118,6 +118,13 @@ export const saveMessage = async (data: MessageInput) => {
         receiverId: true,
         timestamp: true,
         seenAt: true,
+        sender: {
+          select: {
+            id: true,
+            name: true,
+            profilePicture: true,
+          },
+        },
       },
     });
 

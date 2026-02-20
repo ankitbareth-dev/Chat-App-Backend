@@ -4,6 +4,13 @@ export interface ChatMessage {
   senderId: string;
   receiverId: string;
   timestamp: Date;
+  seenAt?: Date | null;
+
+  sender?: {
+    id: string;
+    name: string;
+    profilePicture: string;
+  };
 }
 
 export interface GetMessagesParams {

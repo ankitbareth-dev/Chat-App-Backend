@@ -67,6 +67,8 @@ export const getChatList = async (myId: string): Promise<ChatListUser[]> => {
         name: true,
         phone: true,
         profilePicture: true,
+        isOnline: true,
+        lastSeen: true,
       },
     });
 

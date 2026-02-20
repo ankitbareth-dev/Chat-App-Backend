@@ -11,4 +11,6 @@ export interface PublicUser {
   name: string;
   phone: string;
   profilePicture: string;
+  isOnline: boolean;
+  lastSeen: Date | string;
 }

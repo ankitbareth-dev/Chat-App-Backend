@@ -16,6 +16,9 @@ model User {
   password  String   
   profilePicture String? 
   createdAt DateTime @default(now())
+
+  isOnline  Boolean  @default(false)
+  lastSeen  DateTime @default(now())
   
 
   sentMessages     Message[] @relation("SentMessages")

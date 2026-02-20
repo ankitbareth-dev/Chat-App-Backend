@@ -69,6 +69,8 @@ export const searchUsersByPhone = async (
         name: true,
         phone: true,
         profilePicture: true,
+        isOnline: true,
+        lastSeen: true,
       },
       take: 10,
     });

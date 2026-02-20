@@ -33,11 +33,13 @@ export const getChatHistory = async (
       senderId: true,
       receiverId: true,
       timestamp: true,
+      seenAt: true,
     },
   });
 
   return messages;
 };
+
 export const getChatList = async (myId: string): Promise<ChatListUser[]> => {
   try {
     const sentTo = await prisma.message.findMany({
@@ -52,8 +54,8 @@ export const getChatList = async (myId: string): Promise<ChatListUser[]> => {
       select: { senderId: true },
     });
 
-    const sentIds = sentTo.map((item: any) => item.receiverId);
-    const receivedIds = receivedFrom.map((item: any) => item.senderId);
+    const sentIds = sentTo.map((item) => item.receiverId);
+    const receivedIds = receivedFrom.map((item) => item.senderId);
     const uniqueUserIds = [...new Set([...sentIds, ...receivedIds])];
 
     if (uniqueUserIds.length === 0) {
@@ -72,9 +74,26 @@ export const getChatList = async (myId: string): Promise<ChatListUser[]> => {
       },
     });
 
-    const formattedUsers = users.map((user: any) => ({
+    const unreadCounts = await prisma.message.groupBy({
+      by: ["senderId"],
+      where: {
+        receiverId: myId,
+        seenAt: null,
+      },
+      _count: {
+        _all: true,
+      },
+    });
+
+    const countMap = new Map<string, number>();
+    unreadCounts.forEach((item) => {
+      countMap.set(item.senderId, item._count._all);
+    });
+
+    const formattedUsers = users.map((user) => ({
       ...user,
       profilePicture: user.profilePicture || generateAvatarUrl(user.name),
+      unreadCount: countMap.get(user.id) || 0,
     }));
 
     return formattedUsers;
@@ -98,6 +117,7 @@ export const saveMessage = async (data: MessageInput) => {
         senderId: true,
         receiverId: true,
         timestamp: true,
+        seenAt: true,
       },
     });
 

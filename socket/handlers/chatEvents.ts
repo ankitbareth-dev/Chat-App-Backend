@@ -1,5 +1,6 @@
 import { Server as SocketIOServer, Socket } from "socket.io";
 import { saveMessage } from "../../services/chat.service";
+import { prisma } from "../../utils/prisma";
 
 export const registerChatHandlers = (io: SocketIOServer, socket: Socket) => {
   socket.on("join_chat", (targetUserId: string) => {
@@ -46,5 +47,34 @@ export const registerChatHandlers = (io: SocketIOServer, socket: Socket) => {
     socket
       .to(data.receiverId)
       .emit("user_stopped_typing", { senderId: userId });
+  });
+
+  socket.on("mark_seen", async (data: { senderId: string }) => {
+    const myId = socket.userId;
+    const { senderId } = data;
+
+    if (!myId || !senderId) return;
+
+    try {
+      const updateResult = await prisma.message.updateMany({
+        where: {
+          senderId: senderId,
+          receiverId: myId,
+          seenAt: null,
+        },
+        data: {
+          seenAt: new Date(),
+        },
+      });
+
+      if (updateResult.count > 0) {
+        io.to(senderId).emit("messages_seen", {
+          by: myId,
+          timestamp: new Date(),
+        });
+      }
+    } catch (error) {
+      console.error("Error marking messages as seen:", error);
+    }
   });
 };

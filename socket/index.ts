@@ -17,7 +17,6 @@ export const initializeSocket = (httpServer: HTTPServer) => {
 
   io.on("connection", async (socket) => {
     const userId = socket.userId;
-    console.log(`User connected: ${userId}`);
 
     if (userId) {
       try {
@@ -37,8 +36,6 @@ export const initializeSocket = (httpServer: HTTPServer) => {
     registerChatHandlers(io, socket);
 
     socket.on("disconnect", async () => {
-      console.log(`User disconnected: ${userId}`);
-
       if (userId) {
         try {
           await prisma.user.update({

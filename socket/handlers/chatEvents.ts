@@ -5,7 +5,6 @@ import { prisma } from "../../utils/prisma";
 export const registerChatHandlers = (io: SocketIOServer, socket: Socket) => {
   socket.on("join_chat", (targetUserId: string) => {
     const userId = socket.userId;
-    console.log(`${userId} wants to chat with ${targetUserId}`);
   });
 
   socket.on(

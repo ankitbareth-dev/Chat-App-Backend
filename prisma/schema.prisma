@@ -40,4 +40,5 @@ model Message {
 
   @@index([senderId])
   @@index([receiverId])
+  @@index([receiverId, senderId, seenAt])
 }

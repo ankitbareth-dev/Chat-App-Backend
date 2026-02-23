@@ -77,7 +77,7 @@ export const loginUser = async (data: LoginInput) => {
   });
 
   if (!user) {
-    throw new AppError(404, "User not found with this phone number.");
+    throw new AppError(404, "Invalid phone or password.");
   }
 
   const isPasswordValid = await bcrypt.compare(data.password, user.password);

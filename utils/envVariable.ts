@@ -7,6 +7,9 @@ type EnvConfig = {
   DATABASE_URL: string;
   JWT_SECRET: string;
   CLIENT_URL: string;
+  CLOUDINARY_CLOUD_NAME: string;
+  CLOUDINARY_API_KEY: string;
+  CLOUDINARY_API_SECRET: string;
 };
 
 function getEnv(key: string): string {
@@ -22,6 +25,9 @@ const env: EnvConfig = {
   DATABASE_URL: getEnv("DATABASE_URL"),
   JWT_SECRET: getEnv("JWT_SECRET"),
   CLIENT_URL: getEnv("CLIENT_URL"),
+  CLOUDINARY_CLOUD_NAME: getEnv("CLOUDINARY_CLOUD_NAME"),
+  CLOUDINARY_API_KEY: getEnv("CLOUDINARY_API_KEY"),
+  CLOUDINARY_API_SECRET: getEnv("CLOUDINARY_API_SECRET"),
 };
 
 export default env;

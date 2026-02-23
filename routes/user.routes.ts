@@ -6,6 +6,7 @@ import {
   searchUserSchema,
   updateProfileSchema,
 } from "../validators/userValidator";
+import { upload } from "../config/multer";
 
 const router = Router();
 
@@ -13,9 +14,11 @@ router.use(authenticate);
 
 router.patch(
   "/update-profile",
+  upload.single("profilePic"),
   validate(updateProfileSchema),
   updateUserProfile,
 );
+
 router.get("/search", validate(searchUserSchema, "query"), searchUsers);
 
 export default router;

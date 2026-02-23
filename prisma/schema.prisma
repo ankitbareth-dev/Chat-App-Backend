@@ -6,6 +6,7 @@ generator client {
 
 datasource db {
   provider = "cockroachdb"
+  schemas  = ["chat_schema"]
 }
 
 model User {
@@ -23,6 +24,7 @@ model User {
 
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
+  @@schema("chat_schema")
 }
 
 model Message {
@@ -41,4 +43,6 @@ model Message {
   @@index([senderId])
   @@index([receiverId])
   @@index([receiverId, senderId, seenAt])
+
+  @@schema("chat_schema")
 }

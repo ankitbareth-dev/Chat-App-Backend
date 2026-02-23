@@ -14,6 +14,8 @@ httpServer.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
 });
 
+console.log("DATABASE_URL:", process.env.DATABASE_URL);
+
 const gracefulShutdown = async () => {
   console.log("Shutting down gracefully...");
   await prisma.$disconnect();

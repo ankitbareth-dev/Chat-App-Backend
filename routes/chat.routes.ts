@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { z } from "zod";
 import {
   getChatsList,
   getMessages,
@@ -11,6 +10,8 @@ import {
   getMessagesSchema,
   sendMessageSchema,
 } from "../validators/chatValidator";
+import { uploadVoiceController } from "../controllers/upload.controller";
+import { uploadVoice } from "../config/multer";
 
 const router = Router();
 
@@ -19,5 +20,11 @@ router.use(authenticate);
 router.get("/history", validate(getMessagesSchema, "query"), getMessages);
 router.post("/send", validate(sendMessageSchema), sendMessageFallback);
 router.get("/list", getChatsList);
+
+router.post(
+  "/upload-voice",
+  uploadVoice.single("voice"),
+  uploadVoiceController,
+);
 
 export default router;

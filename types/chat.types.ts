@@ -5,7 +5,8 @@ export interface ChatMessage {
   receiverId: string;
   timestamp: Date;
   seenAt?: Date | null;
-
+  type: string;
+  duration?: number;
   sender?: {
     id: string;
     name: string;

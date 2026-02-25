@@ -34,6 +34,8 @@ export const getChatHistory = async (
       receiverId: true,
       timestamp: true,
       seenAt: true,
+      type: true,
+      duration: true,
     },
   });
 

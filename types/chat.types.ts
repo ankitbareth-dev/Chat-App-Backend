@@ -6,7 +6,7 @@ export interface ChatMessage {
   timestamp: Date;
   seenAt?: Date | null;
   type: string;
-  duration?: number;
+  duration?: number | null;
   sender?: {
     id: string;
     name: string;

@@ -28,4 +28,6 @@ export interface MessageInput {
   senderId: string;
   receiverId: string;
   content: string;
+  type?: string;
+  duration?: number;
 }

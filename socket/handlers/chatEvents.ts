@@ -9,21 +9,27 @@ export const registerChatHandlers = (io: SocketIOServer, socket: Socket) => {
 
   socket.on(
     "send_message",
-    async (data: { receiverId: string; content: string }) => {
+    async (data: {
+      receiverId: string;
+      content: string;
+      type?: string;
+      duration?: number;
+    }) => {
       const userId = socket.userId;
       if (!userId) return;
 
-      const { receiverId, content } = data;
+      const { receiverId, content, type, duration } = data;
 
       try {
         const newMessage = await saveMessage({
           senderId: userId,
           receiverId,
           content,
+          type,
+          duration,
         });
 
         io.to(receiverId).emit("receive_message", newMessage);
-
         socket.emit("message_sent", newMessage);
       } catch (error) {
         console.error("Socket Message Error:", error);

@@ -110,6 +110,8 @@ export const saveMessage = async (data: MessageInput) => {
         senderId: data.senderId,
         receiverId: data.receiverId,
         content: data.content,
+        type: data.type || "TEXT",
+        duration: data.duration,
       },
       select: {
         id: true,
@@ -118,6 +120,8 @@ export const saveMessage = async (data: MessageInput) => {
         receiverId: true,
         timestamp: true,
         seenAt: true,
+        type: true,
+        duration: true,
         sender: {
           select: {
             id: true,

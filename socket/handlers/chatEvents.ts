@@ -30,6 +30,7 @@ export const registerChatHandlers = (io: SocketIOServer, socket: Socket) => {
         });
 
         io.to(receiverId).emit("receive_message", newMessage);
+
         socket.emit("message_sent", newMessage);
       } catch (error) {
         console.error("Socket Message Error:", error);
@@ -52,6 +53,22 @@ export const registerChatHandlers = (io: SocketIOServer, socket: Socket) => {
     socket
       .to(data.receiverId)
       .emit("user_stopped_typing", { senderId: userId });
+  });
+
+  socket.on("start_recording", (data: { receiverId: string }) => {
+    const userId = socket.userId;
+    if (!userId) return;
+
+    socket.to(data.receiverId).emit("user_recording", { senderId: userId });
+  });
+
+  socket.on("stop_recording", (data: { receiverId: string }) => {
+    const userId = socket.userId;
+    if (!userId) return;
+
+    socket
+      .to(data.receiverId)
+      .emit("user_stopped_recording", { senderId: userId });
   });
 
   socket.on("mark_seen", async (data: { senderId: string }) => {

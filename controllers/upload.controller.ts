@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { uploadVoiceNote } from "../services/upload.service";
+import { uploadMediaFile, uploadVoiceNote } from "../services/upload.service";
 import { sendSuccess } from "../utils/apiResponse";
 import { catchAsync } from "../middleware/catchAsync";
 import { AuthRequest } from "../middleware/authMiddleware";
@@ -16,5 +16,17 @@ export const uploadVoiceController = catchAsync(
       url,
       duration,
     });
+  },
+);
+
+export const uploadMediaController = catchAsync(
+  async (req: AuthRequest, res: Response) => {
+    if (!req.file) {
+      return res.status(400).json({ message: "No media file uploaded" });
+    }
+
+    const mediaData = await uploadMediaFile(req.file);
+
+    sendSuccess(res, 200, "Media uploaded successfully", mediaData);
   },
 );

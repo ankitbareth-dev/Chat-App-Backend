@@ -10,8 +10,11 @@ import {
   getMessagesSchema,
   sendMessageSchema,
 } from "../validators/chatValidator";
-import { uploadVoiceController } from "../controllers/upload.controller";
-import { uploadVoice } from "../config/multer";
+import {
+  uploadMediaController,
+  uploadVoiceController,
+} from "../controllers/upload.controller";
+import { uploadMedia, uploadVoice } from "../config/multer";
 
 const router = Router();
 
@@ -25,6 +28,12 @@ router.post(
   "/upload-voice",
   uploadVoice.single("voice"),
   uploadVoiceController,
+);
+
+router.post(
+  "/upload-media",
+  uploadMedia.single("media"),
+  uploadMediaController,
 );
 
 export default router;

@@ -14,22 +14,28 @@ export const registerChatHandlers = (io: SocketIOServer, socket: Socket) => {
       content: string;
       type?: string;
       duration?: number;
+      fileName?: string;
+      fileSize?: number;
+      mimeType?: string;
+      thumbnailUrl?: string;
     }) => {
       const userId = socket.userId;
       if (!userId) return;
 
-      const { receiverId, content, type, duration } = data;
-
       try {
         const newMessage = await saveMessage({
           senderId: userId,
-          receiverId,
-          content,
-          type,
-          duration,
+          receiverId: data.receiverId,
+          content: data.content,
+          type: data.type,
+          duration: data.duration,
+          fileName: data.fileName,
+          fileSize: data.fileSize,
+          mimeType: data.mimeType,
+          thumbnailUrl: data.thumbnailUrl,
         });
 
-        io.to(receiverId).emit("receive_message", newMessage);
+        io.to(data.receiverId).emit("receive_message", newMessage);
 
         socket.emit("message_sent", newMessage);
       } catch (error) {

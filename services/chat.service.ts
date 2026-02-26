@@ -36,6 +36,10 @@ export const getChatHistory = async (
       seenAt: true,
       type: true,
       duration: true,
+      fileName: true,
+      fileSize: true,
+      mimeType: true,
+      thumbnailUrl: true,
     },
   });
 
@@ -114,6 +118,10 @@ export const saveMessage = async (data: MessageInput) => {
         content: data.content,
         type: data.type || "TEXT",
         duration: data.duration,
+        fileName: data.fileName,
+        fileSize: data.fileSize,
+        mimeType: data.mimeType,
+        thumbnailUrl: data.thumbnailUrl,
       },
       select: {
         id: true,
@@ -124,6 +132,10 @@ export const saveMessage = async (data: MessageInput) => {
         seenAt: true,
         type: true,
         duration: true,
+        fileName: true,
+        fileSize: true,
+        mimeType: true,
+        thumbnailUrl: true,
         sender: {
           select: {
             id: true,

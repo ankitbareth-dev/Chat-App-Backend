@@ -7,6 +7,10 @@ export interface ChatMessage {
   seenAt?: Date | null;
   type: string;
   duration?: number | null;
+  fileName?: string | null;
+  fileSize?: number | null;
+  mimeType?: string | null;
+  thumbnailUrl?: string | null;
   sender?: {
     id: string;
     name: string;
@@ -31,4 +35,8 @@ export interface MessageInput {
   content: string;
   type?: string;
   duration?: number;
+  fileName?: string;
+  fileSize?: number;
+  mimeType?: string;
+  thumbnailUrl?: string;
 }

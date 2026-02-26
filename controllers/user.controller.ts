@@ -21,7 +21,10 @@ export const updateUserProfile = catchAsync(
     }
 
     if (req.file) {
-      const uploadResult = await uploadToCloudinary(req.file);
+      const uploadResult = await uploadToCloudinary(
+        req.file,
+        "chat-app-profiles",
+      );
 
       if (uploadResult.success) {
         updateData.profilePicture = uploadResult.data.secure_url;

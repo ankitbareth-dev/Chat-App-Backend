@@ -5,7 +5,7 @@ type UploadResponse =
   | { success: true; data: UploadApiResponse }
   | { success: false; error: UploadApiErrorResponse };
 
-const uploadToCloudinary = (
+export const uploadToCloudinary = (
   file: Express.Multer.File,
   folderName: string,
   resourceType: "image" | "video" | "raw" = "image",
@@ -37,6 +37,7 @@ export const uploadVoiceNote = async (file: Express.Multer.File) => {
     duration: Math.round(result.data.duration || 0),
   };
 };
+
 export const uploadMediaFile = async (file: Express.Multer.File) => {
   const mimeType = file.mimetype;
   let folder = "chat_app_media";

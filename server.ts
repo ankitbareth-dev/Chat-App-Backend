@@ -4,14 +4,14 @@ import { createServer } from "http";
 import { initializeSocket } from "./socket/index";
 import prisma from "./utils/prisma";
 
-const PORT = env.PORT;
+const PORT = env.PORT || 5000;
 
 const httpServer = createServer(app);
 
 initializeSocket(httpServer);
 
 httpServer.listen(PORT, () => {
-  console.log(`Server is running on port http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
 
 const gracefulShutdown = async () => {

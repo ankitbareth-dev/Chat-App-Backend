@@ -12,6 +12,8 @@ import { globalErrorHandler } from "./utils/globalErrorHandler";
 
 const app: Application = express();
 
+app.set("trust proxy", 1);
+
 app.use(
   cors({
     origin: env.CLIENT_URL,

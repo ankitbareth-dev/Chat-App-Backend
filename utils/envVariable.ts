@@ -21,7 +21,7 @@ function getEnv(key: string): string {
 }
 
 const env: EnvConfig = {
-  PORT: Number(getEnv("PORT")),
+  PORT: Number(getEnv("PORT")) || 5000,
   DATABASE_URL: getEnv("DATABASE_URL"),
   JWT_SECRET: getEnv("JWT_SECRET"),
   CLIENT_URL: getEnv("CLIENT_URL"),

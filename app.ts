@@ -28,7 +28,7 @@ app.use(cookieParser());
 app.get("/", (_req: Request, res: Response) => {
   res.send({
     status: "Server is running",
-    message: "Ready to handle requests",
+    message: "Ready to handle requests with ci cd",
   });
 });
 
